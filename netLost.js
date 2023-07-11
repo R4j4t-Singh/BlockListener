@@ -36,28 +36,27 @@ async function main(top10Tokens) {
       diffSum +=
         (tokenValue[top10Token.name]["diffvalue"] *
           price[top10Token.name]["USD"]) /
-        top10Token.decimals;
+        10 ** top10Token.decimals;
       initialSum +=
         (tokenValue[top10Token.name]["initialValue"] *
           price[top10Token.name]["USD"]) /
-        top10Token.decimals;
+        10 ** top10Token.decimals;
     });
 
     var netChange = (diffSum / initialSum) * 100;
-
-    result.push({
-      address: contract.address,
-      total_initial_USD_value: initialSum,
-      total_diff_USD_value: diffSum,
-      netChange: netChange,
-    });
+    if (netChange < -5) {
+      result.push({
+        address: contract.address,
+        total_initial_USD_value: initialSum,
+        total_diff_USD_value: diffSum,
+        netChange: netChange,
+      });
+    }
   }
 
-  console.log(result);
+  // console.log(result);
   // write result to a file
   fs.writeFileSync("netLost.json", JSON.stringify(result));
-
-
 }
 
 main(top10Token_POLYGON);
