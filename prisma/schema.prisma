@@ -14,9 +14,13 @@ model ContractAddresses {
   id             Int        @id @default(autoincrement())
   name           String?
   address        String     
+  implementation String     @default("")
   creationDate   String     @default("NA")
   tokenValue     String     @default("{}")
   network        String     @default("ETHEREUM_MAINNET")
+  verified      Boolean    @default(false) // verified by us
+  contractVerified Boolean @default(false) // verified by etherscan
+  contractName  String     @default("NA") // from etherscan
 }
 
 model Transactions {
@@ -27,6 +31,8 @@ model Transactions {
   from            String
   to              String
   network         String      @default("ETHEREUM_MAINNET")
+
+  @@unique([transactionHash, network], name: "unique_transaction_hash")
 }
 
 model TransactionCount {
